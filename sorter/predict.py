@@ -10,8 +10,9 @@ from joblib import dump, load
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from tensorflow_core.python.keras.applications.mobilenet_v2 import MobileNetV2
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 counter_class1 = 0
 counter_class2 = 0
 counter_class3 = 0
@@ -42,6 +43,12 @@ create_folder(class3_path)
 
 class BasicKNNClassifier:
 
+    def __init__(self):
+        self.mobilenet = MobileNetV2(weights='imagenet', include_top=False)
+        if os.path.exists('trained_model.pkl') and os.path.exists('trained_model_targetNames.pkl'):
+            self.knnclassifier = load('trained_model.pkl')
+            self.target_names = load('trained_model_targetNames.pkl')
+
     @staticmethod
     def preprocess_sample(sample):
         im = Image.open(sample)
@@ -68,7 +75,7 @@ class BasicKNNClassifier:
         self.target = []
         self.target_names = CLASS_NAMES
 
-        print("arrays created")
+        print(CLASS_NAMES)
 
         for sample in empty:
             self.data.append(self.preprocess_sample(sample))
@@ -84,7 +91,7 @@ class BasicKNNClassifier:
 
         self.datanp = np.array(self.data)
         size = len(self.datanp)
-        self.datanp = np.reshape(self.datanp, (size, 224 * 224 * 3))
+        # self.datanp = np.reshape(self.datanp, (size, 224 * 224 * 3))
         self.targetnp = np.array(self.target)
         self.target_namesnp = np.array(self.target_names)
 
@@ -93,30 +100,61 @@ class BasicKNNClassifier:
                                                                             test_size=0.3,
                                                                             random_state=12)
 
-        self.classifier = KNeighborsClassifier()
-        self.classifier.fit(data_train, target_train)
+        evs_train = self.get_embedding_vectors(data_train)
+        evs_test = self.get_embedding_vectors(data_test)
+        self.knnclassifier = KNeighborsClassifier()
+        self.knnclassifier.fit(evs_train, target_train)
 
-        target_pred = self.classifier.predict(data_test)
+        target_pred = self.knnclassifier.predict(evs_test)
         accuracy = metrics.accuracy_score(target_test, target_pred)
 
         return accuracy
 
-    def predict(self, external_input_sample):
-        prediction_raw_values = self.classifier.predict(external_input_sample)
+    def predict(self, input_sample):
+        input_sample = self.get_embedding_vectors(input_sample)
+        prediction_raw_values = self.knnclassifier.predict(input_sample)
+        prediction_resolved_values = [self.target_names[p] for p in prediction_raw_values]
+        return prediction_resolved_values
+
+    def predict_external(self, external_frame):
+        external_frame = self.get_predicting_vectors(external_frame)
+        prediction_raw_values = self.knnclassifier.predict(external_frame)
         prediction_resolved_values = [self.target_names[p] for p in prediction_raw_values]
         return prediction_resolved_values
 
     def saveModel(self):
-        dump(self.classifier, 'trained_model.pkl')
-        dump(self.target_names, 'trained_iris_model_targetNames.pkl')
+        dump(self.knnclassifier, 'trained_model.pkl')
+        dump(self.target_names, 'trained_model_targetNames.pkl')
 
     def loadModel(self):
-        self.classifier = load('/home/resi/PycharmProjects/sorter/model/knn/trained_iris_model.pkl')
-        self.target_names = load('/home/resi/PycharmProjects/sorter/model/knn/trained_iris_model_targetNames.pkl')
+        self.knnclassifier = load('trained_model.pkl')
+        self.target_names = load('trained_model_targetNames.pkl')
+
+    def get_predicting_vectors(self, data_train):
+        embedding_vector = []
+
+        embedding_vector = self.mobilenet.predict(data_train)
+
+        embedding_vector = np.array(embedding_vector)
+        embedding_vector = np.reshape(embedding_vector, (len(data_train), 1 * 7 * 7 * 1280))
+
+        return embedding_vector
+
+    def get_embedding_vectors(self, data_train):
+        embedding_vectors = []
+        for sample in data_train:
+            embedding_vectors.append(self.mobilenet.predict(sample))
+
+        embedding_vectors = np.array(embedding_vectors)
+        embedding_vectors = np.reshape(embedding_vectors, (len(data_train), 1 * 7 * 7 * 1280))
+
+        return embedding_vectors
 
 
 basic_knn_classifier = BasicKNNClassifier()
-basic_knn_classifier.loadModel()
+
+
+# basic_knn_classifier.loadModel()
 
 
 def preprocess_sample(sample):
@@ -125,6 +163,7 @@ def preprocess_sample(sample):
     # im = Image.open(sample)
     im = tf.keras.preprocessing.image.load_img(sample, target_size=(224, 224))  # -> PIL image
     doc = tf.keras.preprocessing.image.img_to_array(im)  # -> numpy array
+
     doc = np.expand_dims(doc, axis=0)
     return doc
 
@@ -188,9 +227,9 @@ while True:
         cv2.imwrite('/home/resi/PycharmProjects/sorter/sorter/predict/predimg.png', frame)
 
         frame = preprocess_sample('/home/resi/PycharmProjects/sorter/sorter/predict/predimg.png')
-        frame = np.reshape(frame, (1, 224 * 224 * 3))
+        # frame = np.reshape(frame, (1, 224 * 224 * 3))
 
-        prediction = basic_knn_classifier.predict(frame)
+        prediction = basic_knn_classifier.predict_external(frame)
         print("Prediction for {0} => \n{1}".format(frame, prediction))
 
         continue
