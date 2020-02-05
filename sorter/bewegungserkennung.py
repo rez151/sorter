@@ -29,12 +29,13 @@ while True:
 
     # filter the contours that have more than 1000 pixels
     for contour in cnts:
-        print(cv2.contourArea(contour))
-        if cv2.contourArea(contour) > 500:
+        if cv2.contourArea(contour) > 0:
+            print(cv2.contourArea(contour))
             #cv2.imshow("Gray Frame", gray)
             cv2.imshow("Delta Frame", delta_frame)
             cv2.imshow("Threshold Frame", thres_frame)
             cv2.imshow("Color Frame", frame)
+            first_frame = gray
             continue
 
         status = 1   #first object found entering the frame

@@ -13,7 +13,10 @@ from tensorflow_core.python.keras.applications.mobilenet_v2 import MobileNetV2
 
 class TransferClassifier:
 
-    def __init__(self):
+    def __init__(self, class1_name, class2_name, class3_name):
+        self.class1_name = class1_name
+        self.class2_name = class2_name
+        self.class3_name = class3_name
         self.target = []
         self.data = []
         self.mobilenet = MobileNetV2(weights='imagenet', include_top=False)
@@ -33,31 +36,32 @@ class TransferClassifier:
         data_dir = "/home/resi/PycharmProjects/sorter/sorter/datatrain/"
         data_dir = pathlib.Path(data_dir)
 
-        CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if item.name != "LICENSE.txt"])
+        # CLASS_NAMES = np.array([self.class1_name, self.class2_name, self.class3_name])
+        # CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if item.name != "LICENSE.txt"])
+        class_names = np.array([self.class1_name, self.class2_name, self.class3_name])
+        class1 = list(data_dir.glob(self.class1_name + '/*'))
+        class2 = list(data_dir.glob(self.class2_name + '/*'))
+        class3 = list(data_dir.glob(self.class3_name + '/*'))
 
-        empty = list(data_dir.glob('empty/*'))
-        ball = list(data_dir.glob('stressball/*'))
-        muetze = list(data_dir.glob('weihnachtsmuetze/*'))
+        print(len(class1))
+        print(len(class2))
+        print(len(class3))
 
-        print(len(empty))
-        print(len(ball))
-        print(len(muetze))
+        self.target_names = class_names
 
-        self.target_names = CLASS_NAMES
+        print(class_names)
 
-        print(CLASS_NAMES)
-
-        for sample in empty:
-            self.data.append(self.preprocess_sample(sample))
-            self.target.append(0)
-
-        for sample in ball:
+        for sample in class1:
             self.data.append(self.preprocess_sample(sample))
             self.target.append(1)
 
-        for sample in muetze:
+        for sample in class2:
             self.data.append(self.preprocess_sample(sample))
             self.target.append(2)
+
+        for sample in class3:
+            self.data.append(self.preprocess_sample(sample))
+            self.target.append(3)
 
         self.datanp = np.array(self.data)
         size = len(self.datanp)
@@ -79,23 +83,23 @@ class TransferClassifier:
 
         return accuracy
 
-    def predict(self, input_sample):
-        input_sample = self.get_embedding_vectors(input_sample)
-        prediction_raw_values = self.knnclassifier.predict(input_sample)
-        prediction_resolved_values = [self.target_names[p] for p in prediction_raw_values]
-        return prediction_resolved_values
+    # def predict(self, input_sample):
+    #    input_sample = self.get_embedding_vectors(input_sample)
+    #    prediction_raw_values = self.knnclassifier.predict(input_sample)
+    #    prediction_resolved_values = [self.target_names[p] for p in prediction_raw_values]
+    #    return prediction_resolved_values
 
     def predict_external(self, external_frame):
         external_frame = self.get_predicting_vectors(external_frame)
         prediction_raw_values = self.knnclassifier.predict(external_frame)
-        prediction_resolved_values = [self.target_names[p] for p in prediction_raw_values]
+        prediction_resolved_values = [self.target_names[p - 1] for p in prediction_raw_values]
         return prediction_resolved_values
 
-    def saveModel(self):
+    def save_model(self):
         dump(self.knnclassifier, 'trained_model.pkl')
         dump(self.target_names, 'trained_model_targetNames.pkl')
 
-    def loadModel(self):
+    def load_model(self):
         self.knnclassifier = load('trained_model.pkl')
         self.target_names = load('trained_model_targetNames.pkl')
 
