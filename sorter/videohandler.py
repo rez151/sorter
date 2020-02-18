@@ -24,16 +24,12 @@ class VideoHandler:
         else:
             return None, None
 
+    def save_frame(self, name):
+        ret, frame = self.get_frame()
+        cv2.imwrite(name, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        #cv2.imwrite(name, frame)
+
     # Release the video source when the object is destroyed
     def __del__(self):
         if self.vid.isOpened():
             self.vid.release()
-
-
-def get_frame(self):
-    return self.vid.read()
-
-
-def save_frame(self, name):
-    ret, frame = self.get_frame()
-    cv2.imwrite(name, frame)

@@ -13,10 +13,11 @@ from tensorflow_core.python.keras.applications.mobilenet_v2 import MobileNetV2
 
 class TransferClassifier:
 
-    def __init__(self, class1_name, class2_name, class3_name):
+    def __init__(self, class1_name, class2_name, class3_name, k=5):
         self.class1_name = class1_name
         self.class2_name = class2_name
         self.class3_name = class3_name
+        self.k = k
         self.target = []
         self.data = []
         self.mobilenet = MobileNetV2(weights='imagenet', include_top=False)
@@ -33,7 +34,7 @@ class TransferClassifier:
         return doc
 
     def load_data(self):
-        data_dir = "/home/resi/PycharmProjects/sorter/sorter/datatrain/"
+        data_dir = "./sorter/datatrain/"
         data_dir = pathlib.Path(data_dir)
 
         # CLASS_NAMES = np.array([self.class1_name, self.class2_name, self.class3_name])
@@ -75,19 +76,13 @@ class TransferClassifier:
 
         evs_train = self.get_embedding_vectors(data_train)
         evs_test = self.get_embedding_vectors(data_test)
-        self.knnclassifier = KNeighborsClassifier()
+        self.knnclassifier = KNeighborsClassifier(self.k)
         self.knnclassifier.fit(evs_train, target_train)
 
         target_pred = self.knnclassifier.predict(evs_test)
         accuracy = metrics.accuracy_score(target_test, target_pred)
 
         return accuracy
-
-    # def predict(self, input_sample):
-    #    input_sample = self.get_embedding_vectors(input_sample)
-    #    prediction_raw_values = self.knnclassifier.predict(input_sample)
-    #    prediction_resolved_values = [self.target_names[p] for p in prediction_raw_values]
-    #    return prediction_resolved_values
 
     def predict_external(self, external_frame):
         external_frame = self.get_predicting_vectors(external_frame)
