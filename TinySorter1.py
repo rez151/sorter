@@ -98,27 +98,32 @@ class TinySorter:
         # top.configure(background="#ffffff")
         top.configure(highlightcolor="black")
 
-        intellogo = PhotoImage(file="/home/resi/PycharmProjects/sorter/IntelLogo.png")
+        intellogo = PhotoImage(file="IntelLogo.png")
         hfulogo = PhotoImage(file="HFUlogo.png")
+        gdlogo = PhotoImage(file="gdlogo.jpg")
         self.intellogo = tk.Label(top, image=intellogo)
         self.intellogo.image = intellogo
-        self.intellogo.place(relx=0, rely=0.7, relheight=0.3, relwidth=0.25)
+        self.intellogo.place(relx=0, rely=0.7, relwidth=0.25, relheight=0.3)
         self.intellogo.configure(background=white)
         self.hfulogo = tk.Label(top, image=hfulogo)
         self.hfulogo.image = hfulogo
         self.hfulogo.place(relx=0.25, rely=0.7, relwidth=0.25, relheight=0.3)
         self.hfulogo.configure(background=white)
+        self.gdlogo = tk.Label(top, image=gdlogo)
+        self.gdlogo.image = gdlogo
+        self.gdlogo.place(relx=0.5, rely=0.7, relwidth=0.5, relheight=0.3)
+        self.gdlogo.configure(background=white)
 
         self.Classes = tk.LabelFrame(top)
         # self.Classes.place(x=0, y=230, height=600, relwidth=0.25)
-        self.Classes.place(relx=0, rely=0, relheight=0.5, relwidth=0.25)
+        self.Classes.place(relx=0, rely=0, relheight=0.55, relwidth=0.25)
         self.Classes.configure(relief='groove')
         self.Classes.configure(font="-family {DejaVu Sans} -size 11 -weight bold")
         self.Classes.configure(text='''Classes''')
         self.Classes.configure(background=white)
 
         self.Frame1 = tk.Frame(self.Classes)
-        self.Frame1.place(relx=0.063, rely=0.696, relheight=0.217, relwidth=0.859
+        self.Frame1.place(relx=0.063, rely=0.1, relheight=0.2, relwidth=0.859
                           , bordermode='ignore')
         self.Frame1.configure(highlightbackground=intelcolor)
         self.Frame1.configure(highlightthickness=3)
@@ -126,7 +131,7 @@ class TinySorter:
         self.Frame1.configure(background=white)
 
         self.Frame2 = tk.Frame(self.Classes)
-        self.Frame2.place(relx=0.063, rely=0.116, relheight=0.217, relwidth=0.859
+        self.Frame2.place(relx=0.063, rely=0.35, relheight=0.2, relwidth=0.859
                           , bordermode='ignore')
         self.Frame2.configure(highlightbackground=intelcolor)
         self.Frame2.configure(highlightthickness=3)
@@ -134,114 +139,130 @@ class TinySorter:
         self.Frame2.configure(background=white)
 
         self.Frame3 = tk.Frame(self.Classes)
-        self.Frame3.place(relx=0.063, rely=0.406, relheight=0.217, relwidth=0.859
+        self.Frame3.place(relx=0.063, rely=0.6, relheight=0.2, relwidth=0.859
                           , bordermode='ignore')
         self.Frame3.configure(highlightbackground=intelcolor)
         self.Frame3.configure(highlightthickness=3)
         self.Frame3.configure(relief="groove")
         self.Frame3.configure(background=white)
 
-        self.TSeparator1_1 = ttk.Separator(self.Frame1)
-        self.TSeparator1_1.place(relx=0.582, rely=0.0, relheight=1.067)
-        self.TSeparator1_1.configure(orient="vertical")
-
-        self.TSeparator1 = ttk.Separator(self.Frame2)
-        self.TSeparator1.place(relx=0.589, rely=0.027, relheight=0.933)
-        self.TSeparator1.configure(orient="vertical")
+        self.Reset = tk.Button(self.Classes)
+        self.Reset.place(relx=0.063, rely=0.85, relheight=0.1, relwidth=0.859
+                         , bordermode='ignore')
+        self.Reset.configure(activebackground="#f9f9f9")
+        self.Reset.configure(background=intelcolor)
+        self.Reset.configure(fg="white")
+        self.Reset.configure(font="-family {DejaVu Sans} -size 15 -weight bold")
+        self.Reset.configure(text='''Reset''')
+        self.Reset.bind('<Button-1>', lambda e: TinySorter1_support.reset(e))
 
         self.TSeparator1_1 = ttk.Separator(self.Frame3)
         self.TSeparator1_1.place(relx=0.582, rely=0.0, relheight=1.067)
         self.TSeparator1_1.configure(orient="vertical")
 
-        self.TakePicture1 = tk.Button(self.Frame2)
-        self.TakePicture1.place(relx=0.073, rely=0.4, height=31, width=111)
-        self.TakePicture1.configure(activebackground=intelcolor)
-        self.TakePicture1.configure(background=white)
-        self.TakePicture1.configure(text='''Take Picture''')
+        self.TSeparator1 = ttk.Separator(self.Frame1)
+        self.TSeparator1.place(relx=0.589, rely=0.027, relheight=0.933)
+        self.TSeparator1.configure(orient="vertical")
+
+        self.TSeparator1_1 = ttk.Separator(self.Frame2)
+        self.TSeparator1_1.place(relx=0.582, rely=0.0, relheight=1.067)
+        self.TSeparator1_1.configure(orient="vertical")
+
+        self.TakePicture1 = tk.Button(self.Frame1)
+        self.TakePicture1.place(relx=0.05, rely=0.4, relheight=0.5, relwidth=0.5)
+        self.TakePicture1.configure(activebackground="#f9f9f9")
+        self.TakePicture1.configure(background=intelcolor)
+        self.TakePicture1.configure(fg="white")
+        self.TakePicture1.configure(text='''Bild aufnehmen''')
+        self.TakePicture1.configure(font="-family {DejaVu Sans} -size 15 -weight bold")
         self.TakePicture1.bind('<Button-1>', lambda e: TinySorter1_support.takePic1(e))
 
-        self.TakePicture2 = tk.Button(self.Frame3)
-        self.TakePicture2.place(relx=0.073, rely=0.4, height=31, width=111)
-        self.TakePicture2.configure(activebackground=intelcolor)
-        self.TakePicture2.configure(background=white)
-        self.TakePicture2.configure(text='''Take Picture''')
+        self.TakePicture2 = tk.Button(self.Frame2)
+        self.TakePicture2.place(relx=0.05, rely=0.4, relheight=0.5, relwidth=0.5)
+        self.TakePicture2.configure(activebackground="#f9f9f9")
+        self.TakePicture2.configure(background=intelcolor)
+        self.TakePicture2.configure(fg="white")
+        self.TakePicture2.configure(text='''Bild aufnehmen''')
+        self.TakePicture2.configure(font="-family {DejaVu Sans} -size 15 -weight bold")
         self.TakePicture2.bind('<Button-1>', lambda e: TinySorter1_support.takePic2(e))
 
-        self.TakePicture3 = tk.Button(self.Frame1)
-        self.TakePicture3.place(relx=0.073, rely=0.4, height=31, width=111)
-        self.TakePicture3.configure(activebackground=intelcolor)
-        self.TakePicture3.configure(background=white)
-        self.TakePicture3.configure(text='''Take Picture''')
+        self.TakePicture3 = tk.Button(self.Frame3)
+        self.TakePicture3.place(relx=0.05, rely=0.4, relheight=0.5, relwidth=0.5)
+        self.TakePicture3.configure(activebackground="#f9f9f9")
+        self.TakePicture3.configure(background=intelcolor)
+        self.TakePicture3.configure(fg="white")
+        self.TakePicture3.configure(text='''Bild aufnehmen''')
+        self.TakePicture3.configure(font="-family {DejaVu Sans} -size 15 -weight bold")
         self.TakePicture3.bind('<Button-1>', lambda e: TinySorter1_support.takePic3(e))
 
-        self.Class1 = tk.Text(self.Frame2)
+        self.Class1 = tk.Text(self.Frame1)
         self.Class1.place(relx=0.0, rely=0.0, relheight=0.32, relwidth=0.349)
         self.Class1.configure(background=white)
-        self.Class1.configure(borderwidth="0")
+        self.Class1.configure(borderwidth="2")
         self.Class1.configure(font=font9)
         self.Class1.configure(selectbackground="#c4c4c4")
         self.Class1.configure(wrap="word")
         # self.Class1.configure(textvariable=TinySorter1_support.class1_name)
         self.Class1.insert(tk.INSERT, "class1", "a")
 
-        self.Class2 = tk.Text(self.Frame3)
+        self.Class2 = tk.Text(self.Frame2)
         self.Class2.place(relx=0.0, rely=0.0, relheight=0.32, relwidth=0.349)
         self.Class2.configure(background=white)
-        self.Class2.configure(borderwidth="0")
+        self.Class2.configure(borderwidth="2")
         self.Class2.configure(font=font9)
         self.Class2.configure(selectbackground="#c4c4c4")
         self.Class2.configure(wrap="word")
         # self.Class2.configure(textvariable=TinySorter1_support.class2_name)
         self.Class2.insert(tk.INSERT, "class2", "a")
 
-        self.Class3 = tk.Text(self.Frame1)
+        self.Class3 = tk.Text(self.Frame3)
         self.Class3.place(relx=0.0, rely=0.0, relheight=0.32, relwidth=0.349)
         self.Class3.configure(background=white)
-        self.Class3.configure(borderwidth="0")
-        self.Class3.configure(font="-family {DejaVu Sans} -size 10 -weight bold")
-        self.Class3.configure(highlightbackground="#bfbfbf")
-        self.Class3.configure(inactiveselectbackground="#bfbfbf")
-        self.Class3.configure(selectbackground="#bfbfbf")
+        self.Class3.configure(borderwidth="2")
+        self.Class3.configure(font=font9)
+        self.Class3.configure(selectbackground="#c4c4c4")
         self.Class3.configure(wrap="word")
         # self.Class3.configure(textvariable=TinySorter1_support.class3_name)
         self.Class3.insert(tk.INSERT, "empty", "a")
 
-        self.Counter1 = tk.Entry(self.Frame2)
-        self.Counter1.place(relx=0.691, rely=0.133, relheight=0.613
+        self.Counter1 = tk.Label(self.Frame1)
+        self.Counter1.place(relx=0.691, rely=0.2, relheight=0.613
                             , relwidth=0.233)
-        self.Counter1.configure(background="#d9d9d9")
-        self.Counter1.configure(font="TkFixedFont")
+        self.Counter1.configure(background="white")
+        self.Counter1.configure(font="-family {DejaVu Sans} -size 20 -weight bold")
+        self.Counter1.configure(fg=intelcolor)
         self.Counter1.configure(textvariable=TinySorter1_support.counter_class1)
 
-        self.Counter2 = tk.Entry(self.Frame3)
-        self.Counter2.place(relx=0.691, rely=0.133, relheight=0.613
+        self.Counter2 = tk.Label(self.Frame2)
+        self.Counter2.place(relx=0.691, rely=0.2, relheight=0.613
                             , relwidth=0.233)
-        self.Counter2.configure(background="#d9d9d9")
-        self.Counter2.configure(font="TkFixedFont")
+        self.Counter2.configure(background="white")
+        self.Counter2.configure(font="-family {DejaVu Sans} -size 20 -weight bold")
+        self.Counter2.configure(fg=intelcolor)
         self.Counter2.configure(textvariable=TinySorter1_support.counter_class2)
 
-        self.Counter3 = tk.Entry(self.Frame1)
-        self.Counter3.place(relx=0.691, rely=0.133, relheight=0.613
+        self.Counter3 = tk.Label(self.Frame3)
+        self.Counter3.place(relx=0.691, rely=0.2, relheight=0.613
                             , relwidth=0.233)
-        self.Counter3.configure(background="#d9d9d9")
-        self.Counter3.configure(font="TkFixedFont")
-        self.Counter3.configure(highlightthickness="0")
-        self.Counter3.configure(selectbackground="#c4c4c4")
+        self.Counter3.configure(background="white")
+        self.Counter3.configure(font="-family {DejaVu Sans} -size 20 -weight bold")
+        self.Counter3.configure(fg=intelcolor)
         self.Counter3.configure(textvariable=TinySorter1_support.counter_class3)
 
         self.Training = tk.LabelFrame(top)
-        self.Training.place(relx=0, rely=0.5, relheight=0.2
+        self.Training.place(relx=0, rely=0.55, relheight=0.15
                             , relwidth=0.25)
         self.Training.configure(relief='groove')
         self.Training.configure(font="-family {DejaVu Sans} -size 11 -weight bold")
         self.Training.configure(text='''Training''')
-        self.Training.configure(background="#dddddd")
+        self.Training.configure(background="white")
 
         self.TrainModel = tk.Button(self.Training)
         self.TrainModel.place(relx=0.571, rely=0.114, height=31, width=105
                               , bordermode='ignore')
         self.TrainModel.configure(activebackground="#f9f9f9")
-        self.TrainModel.configure(background="#bfbfbf")
+        self.TrainModel.configure(background=intelcolor)
+        self.TrainModel.configure(fg="white")
         self.TrainModel.configure(text='''Train Model''')
         self.TrainModel.bind('<Button-1>', lambda e: TinySorter1_support.trainModel(e))
 
@@ -253,15 +274,8 @@ class TinySorter:
         self.Epochs.place(relx=0.143, rely=0.514, height=21, width=13
                           , bordermode='ignore')
         self.Epochs.configure(activebackground="#f9f9f9")
+        self.Epochs.configure(background="white")
         self.Epochs.configure(text='''K''')
-
-        self.Reset = tk.Button(self.Training)
-        self.Reset.place(relx=0.75, rely=0.743, height=31, width=65
-                         , bordermode='ignore')
-        self.Reset.configure(activebackground="#f9f9f9")
-        self.Reset.configure(background="#bfbfbf")
-        self.Reset.configure(text='''Reset''')
-        self.Reset.bind('<Button-1>', lambda e: TinySorter1_support.reset(e))
 
         self.Epoch = tk.Spinbox(self.Training, from_=1.0, to=1000.0)
         self.Epoch.place(relx=0.607, rely=0.514, relheight=0.131, relwidth=0.243
@@ -311,32 +325,43 @@ class TinySorter:
         # self.ExportModel.configure(text='''Export Model''')
         # self.ExportModel.bind('<Button-1>', lambda e: TinySorter1_support.exportModel(e))
 
+        self.Anleitung = tk.LabelFrame(top)
+        self.Anleitung.place(relx=0.6, rely=0, relheight=0.67, relwidth=0.4)
+        self.Anleitung.configure(relief='groove')
+        self.Anleitung.configure(font="-family {DejaVu Sans} -size 11 -weight bold")
+        self.Anleitung.configure(text='''Anleitung''')
+        self.Anleitung.configure(background="white")
+
         self.Labelframe6 = tk.LabelFrame(top)
         # self.Labelframe6.place(relx=0.25, rely=0, height=600, width=650)
         self.Labelframe6.place(relx=0.25, rely=0, relheight=0.7, width=650)
         self.Labelframe6.configure(relief='groove')
         self.Labelframe6.configure(font="-family {DejaVu Sans} -size 11 -weight bold")
         self.Labelframe6.configure(text='''Webcam''')
-        self.Labelframe6.configure(background="#dddddd")
+        self.Labelframe6.configure(background="white")
 
         self.TSeparator3_6 = ttk.Separator(self.Labelframe6)
         self.TSeparator3_6.place(relx=-0, rely=0.9, relwidth=1
                                  , bordermode='ignore')
 
         self.Startsorting = tk.Button(self.Labelframe6)
-        self.Startsorting.place(relx=0.30, rely=0.925, relheight=0.05, relwidth=0.2
+        self.Startsorting.place(relx=0.01, rely=0.91, relheight=0.08, relwidth=0.48
                                 , bordermode='ignore')
         self.Startsorting.configure(activebackground="#f9f9f9")
-        self.Startsorting.configure(background="#bfbfbf")
+        self.Startsorting.configure(background=intelcolor)
+        self.Startsorting.configure(fg="white")
         self.Startsorting.configure(text='''Start sorting''')
+        self.Startsorting.configure(font="-family {DejaVu Sans} -size 15 -weight bold")
         self.Startsorting.bind('<Button-1>', lambda e: TinySorter1_support.startSorting(e))
 
         self.Stopsorting = tk.Button(self.Labelframe6)
-        self.Stopsorting.place(relx=0.60, rely=0.925, relheight=0.05, relwidth=0.2
+        self.Stopsorting.place(relx=0.51, rely=0.91, relheight=0.08, relwidth=0.48
                                , bordermode='ignore')
         self.Stopsorting.configure(activebackground="#f9f9f9")
-        self.Stopsorting.configure(background="#bfbfbf")
+        self.Stopsorting.configure(background=intelcolor)
+        self.Stopsorting.configure(fg="white")
         self.Stopsorting.configure(text='''Stop sorting''')
+        self.Stopsorting.configure(font="-family {DejaVu Sans} -size 15 -weight bold")
         self.Stopsorting.bind('<Button-1>', lambda e: TinySorter1_support.stopSorting(e))
 
         self.CamPic = tk.Canvas(self.Labelframe6, width=vidsrc.width, height=vidsrc.height)

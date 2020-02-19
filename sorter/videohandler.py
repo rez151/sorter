@@ -3,7 +3,7 @@ import cv2
 
 class VideoHandler:
 
-    def __init__(self, video_source=0):
+    def __init__(self, video_source=1):
         # Open the video source
         self.vid = cv2.VideoCapture(video_source)
         if not self.vid.isOpened():
@@ -27,7 +27,7 @@ class VideoHandler:
     def save_frame(self, name):
         ret, frame = self.get_frame()
         cv2.imwrite(name, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        #cv2.imwrite(name, frame)
+        # cv2.imwrite(name, frame)
 
     # Release the video source when the object is destroyed
     def __del__(self):
