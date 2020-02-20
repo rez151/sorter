@@ -3,7 +3,7 @@ import cv2
 
 class VideoHandler:
 
-    def __init__(self, video_source=1):
+    def __init__(self, video_source=0):
         # Open the video source
         self.vid = cv2.VideoCapture(video_source)
         if not self.vid.isOpened():

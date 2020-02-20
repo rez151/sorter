@@ -27,6 +27,15 @@ except ImportError:
 def set_Tk_var():
     global k
     k = tk.IntVar()
+    k.set(1)
+
+    global info1, info2
+    info1 = tk.StringVar()
+    info1.set("noch nichts gelernt")
+
+    info2 = tk.StringVar()
+    info2.set("Sortierer nicht bereit")
+
     global counter_class1, counter_class2, counter_class3
     counter_class1 = tk.IntVar()
     counter_class1.set(0)
@@ -68,8 +77,7 @@ def takePic2(p1):
 
 def takePic3(p1):
     global class3_name, counter_class3
-    class3_name = w.Class3.get("1.0", 'end-1c')
-    w.Class3.configure(state=tk.DISABLED)
+    # class3_name = "leer"
     w.Class3.configure(background='#0071C5')
 
     if not os.path.exists(dataset_path + class3_name):
@@ -79,10 +87,6 @@ def takePic3(p1):
     vid.save_frame(filepath)
 
     counter_class3.set(counter_class3.get() + 1)
-
-
-def exportModel(p1):
-    pass
 
 
 def reset(p1):
@@ -101,10 +105,29 @@ def reset(p1):
     w.Class3.configure(state=tk.NORMAL)
     w.Class3.configure(background='white')
 
+    global info1, info2
+    info1.set("noch nichts gelernt")
+    info2.set("Sortierer nicht bereit")
+
+
+def increase_k(p1):
+    global k
+
+    tmp = k.get()
+    if tmp < 99:
+        k.set(tmp + 1)
+
+
+def decrease_k(p1):
+    global k
+
+    tmp = k.get()
+    if tmp > 1:
+        k.set(tmp - 1)
+
 
 def startSorting(p1):
-    print('TinySorter1_support.startSorting')
-    sys.stdout.flush()
+    global info2
 
     if transfer_classifier is None:
         print("you have to train a classifier first")
@@ -118,6 +141,7 @@ def startSorting(p1):
     prediction = transfer_classifier.predict_external(frame)
 
     print("Prediction: " + str(prediction))
+    info2.set(str(prediction[0]))
 
     if prediction[0] == class1_name:
         arduino.tilt_left()
@@ -134,21 +158,40 @@ def startSorting(p1):
 
 
 def stopSorting(p1):
-    pass
+    global info2
+    info2.set("Sortierer gestoppt")
 
 
 def trainModel(p1):
+    global k
+    global info1, info2
+    global counter_class1, counter_class2, counter_class3
+
+    if int(counter_class1.get()) == 0 or int(counter_class2.get()) == 0 or int(counter_class3.get()) == 0:
+        info1.set("Zu wenig Bilder")
+        return
+
+    if k.get() >= int(counter_class1.get()) + int(counter_class2.get()) + int(counter_class3.get()) - 1:
+        info1.set("K zu groß")
+        return
+
+    info1.set("KNN wird erstellt.")
     global transfer_classifier
     transfer_classifier = TransferClassifier(class1_name, class2_name, class3_name, k.get())
 
+    info1.set("Datensatz wird geladen..")
     print("loading dataset")
     transfer_classifier.load_data()
 
     print("start training")
+    info1.set("KNN lernt...")
     accuracy = transfer_classifier.train()
     print("Model Accuracy:", accuracy)
+    info1.set("Genauigkeit: " + str("%3.2f" % accuracy))
 
     transfer_classifier.save_model()
+
+    info2.set("Sortierer bereit")
 
 
 def init(top, gui, vidsrc, *args, **kwargs):
@@ -171,13 +214,15 @@ arduino = ArduinoConnection('/dev/ttyACM0')
 
 class1_name = "class1"
 class2_name = "class2"
-class3_name = "empty"
+class3_name = "leer"
 
 dataset_path = "./sorter/datatrain/"
 
 if __name__ == '__main__':
     import TinySorter1
 
+    for x in os.listdir(dataset_path):
+        shutil.rmtree(dataset_path + x)
     # TinySorter1
 
     TinySorter1.vp_start_gui()
