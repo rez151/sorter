@@ -259,7 +259,10 @@ def destroy_window():
 
 
 global transfer_classifier
-arduino = ArduinoConnection('/dev/ttyACM1')  # Port kann Variieren!!! kann in der Arduino IDE nachgeschaut werden
+
+# Port kann Variieren!!! kann in der Arduino IDE nachgeschaut werden 1 oder 0 hinten
+# wenn hier ein fehler kommt --> alt+F12 --> sudo chmod 666 /dev/ttypACM1
+arduino = ArduinoConnection('/dev/ttyACM1')
 
 # class1_name = "class1"
 # class2_name = "class2"

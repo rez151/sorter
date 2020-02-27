@@ -10,7 +10,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from tensorflow_core.python.keras.applications.mobilenet_v2 import MobileNetV2
 
-
+# beide Links Simpel auf ein Plakat bringen!!
+# https://github.com/google-coral/project-teachable  README!!!!
+# https://observablehq.com/@makerslabemlyon/how-can-we-use-mobilenet-to-train-a-knn
 class TransferClassifier:
 
     def __init__(self, class1_name, class2_name, class3_name, k=5):
@@ -21,9 +23,9 @@ class TransferClassifier:
         self.target = []
         self.data = []
         self.mobilenet = MobileNetV2(weights='imagenet', include_top=False)
-        if os.path.exists('trained_model.pkl') and os.path.exists('trained_model_targetNames.pkl'):
-            self.knnclassifier = load('trained_model.pkl')
-            self.target_names = load('trained_model_targetNames.pkl')
+        # if os.path.exists('trained_model.pkl') and os.path.exists('trained_model_targetNames.pkl'):
+        #    self.knnclassifier = load('trained_model.pkl')
+        #    self.target_names = load('trained_model_targetNames.pkl')
 
     @staticmethod
     def preprocess_sample(sample):
@@ -94,9 +96,9 @@ class TransferClassifier:
         dump(self.knnclassifier, 'trained_model.pkl')
         dump(self.target_names, 'trained_model_targetNames.pkl')
 
-    def load_model(self):
-        self.knnclassifier = load('trained_model.pkl')
-        self.target_names = load('trained_model_targetNames.pkl')
+    # def load_model(self):
+    #    self.knnclassifier = load('trained_model.pkl')
+    #    self.target_names = load('trained_model_targetNames.pkl')
 
     def get_predicting_vectors(self, data_train):
         embedding_vector = self.mobilenet.predict(data_train)
