@@ -1,7 +1,7 @@
 import serial
 import time
 
-
+# Sendet nur die Signale (r, l, m, w) die vom Arduinoprogramm weiterverarbeitet werden
 class ArduinoConnection:
 
     def __init__(self, port, baudrate=115200):

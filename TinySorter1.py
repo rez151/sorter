@@ -65,6 +65,7 @@ def destroy_TinySorter():
     w = None
 
 
+# Alles was hier steht wirkt sich auf die GUI aus
 class TinySorter:
     def __init__(self, top=None, vidsrc=None):
         self.vidsrc = vidsrc
@@ -232,10 +233,6 @@ class TinySorter:
         self.Class3.configure(font="-family {DejaVu Sans} -size 14 -weight bold")
         self.Class3.configure(text="Leer")
         self.Class3.configure(anchor=tk.W)
-        # self.Class3.configure(selectbackground="#c4c4c4")
-        # self.Class3.configure(wrap="word")
-        # self.Class3.configure(textvariable=TinySorter1_support.class3_name)
-        # self.Class3.insert(tk.INSERT, "Leer", "a")
 
         self.Counter1 = tk.Label(self.Frame1)
         self.Counter1.place(relx=0.691, rely=0.2, relheight=0.613
@@ -399,6 +396,7 @@ class TinySorter:
         self.delay = 15
         self.update()
 
+    # Funktion um die Kamerabilder zu aktualisieren
     def update(self):
         # Get a frame from the video source
         ret, frame = self.vidsrc.get_frame()

@@ -2,7 +2,8 @@ import cv2
 
 
 class VideoHandler:
-
+    # video_source kann auch variieren!!! bei mir zwischen 1 und 5
+    # sonst ist hier nichts zu machen
     def __init__(self, video_source=2):
         # Open the video source
         self.vid = cv2.VideoCapture(video_source)
