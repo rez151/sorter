@@ -146,8 +146,18 @@ class TinySorter:
         self.Frame3.configure(relief="groove")
         self.Frame3.configure(background=white)
 
+        self.Shake = tk.Button(self.Classes)
+        self.Shake.place(relx=0.063, rely=0.85, relheight=0.1, relwidth=0.40
+                         , bordermode='ignore')
+        self.Shake.configure(activebackground="#f9f9f9")
+        self.Shake.configure(background=intelcolor)
+        self.Shake.configure(fg="white")
+        self.Shake.configure(font="-family {DejaVu Sans} -size 15 -weight bold")
+        self.Shake.configure(text='''Schütteln''')
+        self.Shake.bind('<Button-1>', lambda e: TinySorter1_support.shake(e))
+
         self.Reset = tk.Button(self.Classes)
-        self.Reset.place(relx=0.063, rely=0.85, relheight=0.1, relwidth=0.859
+        self.Reset.place(relx=0.55, rely=0.85, relheight=0.1, relwidth=0.40
                          , bordermode='ignore')
         self.Reset.configure(activebackground="#f9f9f9")
         self.Reset.configure(background=intelcolor)
@@ -307,6 +317,26 @@ class TinySorter:
         self.Anleitung.configure(font="-family {DejaVu Sans} -size 11 -weight bold")
         self.Anleitung.configure(text='''Anleitung''')
         self.Anleitung.configure(background="white")
+
+        self.AnleitungText = tk.Text(self.Anleitung, height=10)
+        self.AnleitungText.place(relx=0.05, rely=0.1, relheight=0.65, relwidth=0.9)
+        self.AnleitungText.configure(relief='groove')
+        self.AnleitungText.configure(font="-family {DejaVu Sans} -size 18 -weight bold")
+        self.AnleitungText.configure(fg=intelcolor)
+        self.AnleitungText.configure(background="white")
+        self.AnleitungText.insert("1.0", "1. Benenne die Klassen \n")
+        self.AnleitungText.insert("2.0", "\n")
+        self.AnleitungText.insert("3.0", "2. nehme Bilder der Jeweiligen Klassen auf \n")
+        self.AnleitungText.insert("4.0", "\n")
+        self.AnleitungText.insert("5.0", "3. wähle ein K \n")
+        self.AnleitungText.insert("6.0", "\n")
+        self.AnleitungText.insert("7.0", "4. lernen \n")
+        self.AnleitungText.insert("8.0", "\n")
+        self.AnleitungText.insert("9.0", "5. starte Sortierer \n")
+        self.AnleitungText.insert("10.0", "\n")
+        self.AnleitungText.insert("11.0", "6. stoppe Sortierer \n")
+        self.AnleitungText.insert("12.0", "\n")
+        self.AnleitungText.insert("13.0", "7. Wiederhole 2-6 mit mehr Bilder und anderem K \n")
 
         self.Cameraframe = tk.LabelFrame(top)
         self.Cameraframe.place(relx=0.25, rely=0, relheight=0.7, width=650)

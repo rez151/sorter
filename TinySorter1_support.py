@@ -1,4 +1,5 @@
 import os
+import threading
 import time
 
 import cv2
@@ -89,6 +90,17 @@ def takePic3(p1):
     counter_class3.set(counter_class3.get() + 1)
 
 
+def shake(p1):
+    global shaking
+
+    if not shaking:
+        arduino.shake()
+        shaking = True
+    else:
+        arduino.center()
+        shaking = False
+
+
 def reset(p1):
     global counter_class1, counter_class2, counter_class3
     for x in os.listdir(dataset_path):
@@ -104,6 +116,9 @@ def reset(p1):
     w.Class2.configure(background='white')
     w.Class3.configure(state=tk.NORMAL)
     w.Class3.configure(background='white')
+
+    global transfer_classifier
+    del transfer_classifier
 
     global info1, info2
     info1.set("noch nichts gelernt")
@@ -126,8 +141,52 @@ def decrease_k(p1):
         k.set(tmp - 1)
 
 
+def sorting_loop():
+    global sorting
+
+    while sorting:
+
+        vid.save_frame("./sorter/predict/predimg.png")
+        frame = preprocess_sample('./sorter/predict/predimg.png')
+        # frame = preprocess_sample(frame)
+        prediction = transfer_classifier.predict_external(frame)
+
+        print("Prediction: " + str(prediction))
+        info2.set(str(prediction[0]))
+
+        if prediction[0] == class1_name:
+            arduino.tilt_left()
+            time.sleep(0.5)
+            arduino.center()
+        if prediction[0] == class2_name:
+            arduino.tilt_right()
+            time.sleep(0.5)
+            arduino.center()
+        if prediction[0] == class3_name:
+            arduino.shake()
+            time.sleep(0.5)
+            arduino.center()
+
+
 def startSorting(p1):
     global info2
+    global sorting
+
+    if transfer_classifier is None:
+        print("you have to train a classifier first")
+        return
+
+    print("predict")
+
+    sorting = True
+
+    threading.Thread(target=sorting_loop).start()
+
+
+def startSorting_old(p1):
+    global info2
+    global sorting
+    sorting = True
 
     if transfer_classifier is None:
         print("you have to train a classifier first")
@@ -160,6 +219,9 @@ def startSorting(p1):
 def stopSorting(p1):
     global info2
     info2.set("Sortierer gestoppt")
+    global sorting
+    sorting = False
+    arduino.center()
 
 
 def trainModel(p1):
@@ -210,13 +272,17 @@ def destroy_window():
 
 
 global transfer_classifier
-arduino = ArduinoConnection('/dev/ttyACM0')
+arduino = ArduinoConnection('/dev/ttyACM1')
 
 class1_name = "class1"
 class2_name = "class2"
 class3_name = "leer"
 
 dataset_path = "./sorter/datatrain/"
+
+global sorting, shaking
+sorting = False
+shaking = False
 
 if __name__ == '__main__':
     import TinySorter1

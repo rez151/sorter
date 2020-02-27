@@ -46,7 +46,7 @@ def delete_dataset(class1, class2, class3):
 
 def run():
     cap = cv2.VideoCapture(0)
-    arduino = ArduinoConnection('/dev/ttyACM0')
+    arduino = ArduinoConnection('/dev/ttyACM1')
 
     counter_class1 = 0
     counter_class2 = 0

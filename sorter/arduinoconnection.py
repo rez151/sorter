@@ -1,6 +1,5 @@
-import serial, time
-from IPython.core.magics import logging
-from pynput.keyboard import Key, Listener
+import serial
+import time
 
 
 class ArduinoConnection:
@@ -25,28 +24,3 @@ class ArduinoConnection:
 
     def shake(self):
         self.arduino.write(b'w')
-
-
-"""
-def on_press(key):
-    a = key
-
-    if a == Key.right:
-        arduino.write(b'r')
-
-    if a == Key.left:
-        arduino.write(b'l')
-
-    if a == Key.up:
-        arduino.write(b'm')
-
-    if a == Key.down:
-        arduino.write(b'w')
-
-    if a == Key.backspace:
-        arduino.close()
-
-
-with Listener(on_press=on_press) as listener:
-    listener.join()
-"""
